@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:KillerSudoku"
+             x:Class="KillerSudoku.MainPage">
+    <AbsoluteLayout                 HorizontalOptions="FillAndExpand">
+        <AbsoluteLayout.GestureRecognizers>
+            <PanGestureRecognizer PanUpdated="OnPanUpdated" />
+        </AbsoluteLayout.GestureRecognizers>
+        <StackLayout VerticalOptions="StartAndExpand" Padding="0" Margin="0" >
+           
+            <Label
+            Text="Enter Target Number" />
+
+            <Entry
+            x:Name="TargetNumber"
+            x:DataType="x:Int32" Keyboard="Numeric" />
+            <Label Text="In How Many Numbers" />
+
+            <Entry
+            x:Name="NumberOfNumbers"
+            x:DataType="x:Int32" Keyboard="Numeric" />
+
+            <local:NumbersSelect x:Name="SelectedNumbers" />
+
+            <Label
+            x:Name="CommonNumbers"
+            Text="" FontSize="Large"/>
+
+            <Label
+            x:Name="Result"
+            Text=""  FontSize="Large"/>
+
+        </StackLayout>
+    </AbsoluteLayout>
+
+</ContentPage>
