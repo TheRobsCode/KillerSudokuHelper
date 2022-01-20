@@ -20,10 +20,11 @@ namespace KillerSudoku
         }
         public int[] GetCommonNumbers(List<int[]> results, int[] mustHave)
         {
-            var res = new List<int>();
             var length = results.Count;
             if (length < 2)
                 return new int[0];
+
+            var res = new List<int>();
 
             for (var i = 1; i <= 9; i++)
             {
@@ -66,8 +67,10 @@ namespace KillerSudoku
                 if (found.Contains(array[i]))
                     continue;
                 sum += array[i];
-                var tempFound = new List<int>(found);
-                tempFound.Add(array[i]);
+                var tempFound = new List<int>(found)
+                {
+                    array[i]
+                };
                 GetCombinationsImplementation(array, total, inMany, i + 1, tempFound, results, sum);
                 sum -= array[i];
             }

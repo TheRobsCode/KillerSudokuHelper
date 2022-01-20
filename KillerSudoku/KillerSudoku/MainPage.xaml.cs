@@ -10,7 +10,13 @@ namespace KillerSudoku
 {
     public partial class MainPage : ContentPage
     {
-        private ICalcService _calcService = new CalcService();
+        private readonly ICalcService _calcService = new CalcService();
+        private int _currentTargetNumber;
+        private int _currentNumNumber;
+        private const int MinTargetNumber = 3;
+        private const int MaxTargetNumber = 45;
+        private const int MinNumberOfNumbers = 2;
+        private const int MaxNumberOfNumbers = 9;
         public MainPage()
         {
             InitializeComponent();
@@ -40,56 +46,67 @@ namespace KillerSudoku
             {
                 return;
             }
-            var mustHave = SelectedNumbers.GetAlwaysIncludedNumbers();
-            var result = _calcService.GetCombinations(targetNumber, inMany, SelectedNumbers.GetNeverIncludedNumbers(), mustHave);
+            SelectedNumbers.GetAlwaysAndNeverIncludedNumbers(out var mustHave, out var neverHave);
+            var result = _calcService.GetCombinations(targetNumber, inMany, neverHave, mustHave);
             ShowResults(result);
 
             ShowCommonNumbers(result, mustHave);
         }
-        private int _currentTargetNumber;
-        private int _currentNumNumber;
 
         void OnPanUpdated(object sender, PanUpdatedEventArgs e)
         {
             if (e.StatusType == GestureStatus.Started)
             {
-                var targetNumber = 3;
-                int.TryParse(TargetNumber.Text, out targetNumber);
-                _currentTargetNumber = targetNumber;
-
-                var numOfNumbers = 2;
-                int.TryParse(NumberOfNumbers.Text, out numOfNumbers);
-                _currentNumNumber = numOfNumbers;
+                _currentTargetNumber = TextToInt(TargetNumber.Text, MinTargetNumber);
+                _currentNumNumber = TextToInt(NumberOfNumbers.Text, MinNumberOfNumbers);
             }
-            if (e.StatusType == GestureStatus.Running)
+            else if (e.StatusType == GestureStatus.Running)
             {
                 var x = (int)(e.TotalX * 5 / (Application.Current.MainPage.Width));
                 var y = -(int)(e.TotalY * (20) / (Application.Current.MainPage.Height));
 
-                if (Math.Abs(e.TotalY) > Math.Abs(e.TotalX))
+                if (IsSwippingVertically(e.TotalX, e.TotalY))
                 {
-                    var targetNumber = _currentTargetNumber;
-                    targetNumber += y;
-                    if (targetNumber < 3)
-                        targetNumber = 3;
-                    if (targetNumber > 45)
-                        targetNumber = 45;
-                    TargetNumber.Text = targetNumber.ToString();
+                    SetTargetNumber(_currentTargetNumber + y);
                 }
                 else
                 {
-                    var numOfNumbers = _currentNumNumber;
-                    numOfNumbers += x;
-                    if (numOfNumbers < 2)
-                        numOfNumbers = 2;
-                    if (numOfNumbers > 9)
-                        numOfNumbers = 9;
-                    NumberOfNumbers.Text = numOfNumbers.ToString();
+                    SetNumberOfNumbers(_currentNumNumber + x);
                 }
             }
 
         }
 
+        private void SetNumberOfNumbers(int numOfNumbers)
+        {
+            if (numOfNumbers < MinNumberOfNumbers)
+                numOfNumbers = MinNumberOfNumbers;
+            if (numOfNumbers > MaxNumberOfNumbers)
+                numOfNumbers = MaxNumberOfNumbers;
+            NumberOfNumbers.Text = numOfNumbers.ToString();
+        }
+
+        private void SetTargetNumber(int targetNumber)
+        {
+            if (targetNumber < MinTargetNumber)
+                targetNumber = MinTargetNumber;
+            if (targetNumber > MaxTargetNumber)
+                targetNumber = MaxTargetNumber;
+            TargetNumber.Text = targetNumber.ToString();
+        }
+
+        private bool IsSwippingVertically(double totalX, double totalY)
+        {
+            return Math.Abs(totalY) > Math.Abs(totalX);
+        }
+        private int TextToInt(string text, int defaultVal)
+        {
+            if (int.TryParse(text, out var res))
+            {
+                return res;
+            }
+            return defaultVal;
+        }
         private void ShowResults(List<int[]> result)
         {
             var textResult = "";
@@ -115,7 +132,7 @@ namespace KillerSudoku
             var commonNumbers = _calcService.GetCommonNumbers(result, mustHave);
             if (commonNumbers.Any())
             {
-                CommonNumbers.Text = "Common:" + String.Join(",", commonNumbers);
+                CommonNumbers.Text = "Common:" + string.Join(",", commonNumbers);
                 CommonNumbers.IsVisible = true;
             }
             else

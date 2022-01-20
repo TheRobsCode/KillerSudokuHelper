@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration;
 using Xamarin.Forms.Xaml;
 
 namespace KillerSudoku
@@ -16,7 +11,7 @@ namespace KillerSudoku
         private const int NormalState = 0;
         private const int AlwaysState = 1;
         private const int NeverState = 2;
-        private Button[] _buttons;
+        private readonly Button[] _buttons;
 
         public event EventHandler<EventArgs> ItemTapped;
         public NumbersSelect()
@@ -31,32 +26,35 @@ namespace KillerSudoku
             Button7.Clicked += Button_Clicked;
             Button8.Clicked += Button_Clicked;
             Button9.Clicked += Button_Clicked;
-            _buttons = new Button[] {Button1, Button2, Button3, Button4, Button5, Button6, Button7, Button8, Button9};    
+            _buttons = new Button[] {Button1, Button2, Button3, Button4, Button5, Button6, Button7, Button8, Button9};
+            
         }
-        public int[] GetAlwaysIncludedNumbers()
+        public void GetAlwaysAndNeverIncludedNumbers(out int[] mustHave, out int[] neverHave)
         {
-            return GetStateButtons(AlwaysState);
-        }
-        public int[] GetNeverIncludedNumbers()
-        {
-            return GetStateButtons(NeverState);
-        }
-        private int[] GetStateButtons(int stateRequest)
-        {
-            var result = new List<int>();
+            var must = new List<int>();
+            var never = new List<int>();
             for (int i = 0; i < _buttons.Length; i++)
             {
-                Button button = _buttons[i];
-                int.TryParse(button.CommandParameter.ToString(), out var state);
-                if (state == stateRequest)
-                    result.Add(i + 1);
+                var button = _buttons[i];
+                var srate = GetState(button);
+                if (srate == AlwaysState)
+                    must.Add(i + 1);
+                else if (srate == NeverState)
+                    never.Add(i + 1);
+
             }
-            return result.ToArray();
+            mustHave = must.ToArray();
+            neverHave = never.ToArray();
+        }
+        private int GetState(Button button)
+        {
+            int.TryParse(button.CommandParameter.ToString(), out var state);
+            return state;
         }
         private void Button_Clicked(object sender, EventArgs e)
         {
             var button = sender as Button;
-            int.TryParse(button.CommandParameter.ToString(), out var state);
+            var state = GetState(button);
             state++;
             if (state >= 3)
                 state = 0;

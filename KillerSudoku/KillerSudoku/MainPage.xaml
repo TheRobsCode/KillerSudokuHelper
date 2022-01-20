@@ -6,13 +6,13 @@
         <AbsoluteLayout.GestureRecognizers>
             <PanGestureRecognizer PanUpdated="OnPanUpdated" />
         </AbsoluteLayout.GestureRecognizers>
-        <StackLayout VerticalOptions="StartAndExpand" Padding="0" Margin="0" >
-           
-            <Label
+        <StackLayout VerticalOptions="StartAndExpand" Padding="0" Margin="5" >
+
+            <Label 
             Text="Enter Target Number" />
 
             <Entry
-            x:Name="TargetNumber"
+            x:Name="TargetNumber"  
             x:DataType="x:Int32" Keyboard="Numeric" />
             <Label Text="In How Many Numbers" />
 
@@ -20,16 +20,16 @@
             x:Name="NumberOfNumbers"
             x:DataType="x:Int32" Keyboard="Numeric" />
 
-            <local:NumbersSelect x:Name="SelectedNumbers" />
+            <local:NumbersSelect x:Name="SelectedNumbers"   />
 
-            <Label
+            <Label 
             x:Name="CommonNumbers"
             Text="" FontSize="Large"/>
 
-            <Label
+            <Label 
             x:Name="Result"
-            Text=""  FontSize="Large"/>
-
+            Text=""  FontSize="Large" />
+           
         </StackLayout>
     </AbsoluteLayout>
 
