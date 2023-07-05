@@ -26,6 +26,7 @@ namespace KillerSudoku
             Button7.Clicked += Button_Clicked;
             Button8.Clicked += Button_Clicked;
             Button9.Clicked += Button_Clicked;
+            ButtonC.Clicked += ButtonClear_Clicked;
             _buttons = new Button[] {Button1, Button2, Button3, Button4, Button5, Button6, Button7, Button8, Button9};
             
         }
@@ -50,6 +51,16 @@ namespace KillerSudoku
         {
             int.TryParse(button.CommandParameter.ToString(), out var state);
             return state;
+        }
+        private void ButtonClear_Clicked(object sender, EventArgs e)
+        {
+            foreach(var button in _buttons)
+            {
+                button.BackgroundColor = Color.Gray;
+                button.TextColor = Color.White;
+                button.CommandParameter = NormalState;
+            }
+            ItemTapped(this, e);
         }
         private void Button_Clicked(object sender, EventArgs e)
         {

@@ -109,10 +109,11 @@ namespace KillerSudoku
         }
         private void ShowResults(List<int[]> result)
         {
+            Result.Children.Clear();
             var textResult = "";
             foreach (var res in result)
             {
-                var first = true;
+                /*var first = true;
                 foreach (var num in res)
                 {
                     if (!first)
@@ -121,10 +122,21 @@ namespace KillerSudoku
                     }
                     first = false;
                     textResult += num;
-                }
-                textResult += " \t\t";
+                }*/
+                textResult = String.Join(",", res);
+                
+                Result.Children.Add(new Label()
+                {
+                    Text = textResult,
+                    Margin = new Thickness(10),
+                    HorizontalTextAlignment = TextAlignment.Start,
+                    VerticalTextAlignment = TextAlignment.Start,
+                    FlowDirection = FlowDirection.LeftToRight,
+                    FontSize =22
+                    
+                });
             }
-            Result.Text = textResult;
+            //Result.Text = textResult;
         }
 
         private void ShowCommonNumbers(List<int[]> result, int[] mustHave)

@@ -26,10 +26,25 @@
             x:Name="CommonNumbers"
             Text="" FontSize="Large"/>
 
-            <Label 
+           <!-- <Label 
             x:Name="Result"
             Text=""  FontSize="Large" />
            
+            <Grid VerticalOptions="Start" Margin="10,0,10,0" x:Name="Result">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+            -->
+            <FlexLayout Direction="Row" Wrap="Wrap" 
+                        VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Margin="0,10,0,0"
+                AlignItems="End"
+                JustifyContent="Start" x:Name="Result" AlignContent="SpaceAround"  >
+
+            </FlexLayout>
+            
         </StackLayout>
     </AbsoluteLayout>
 
